@@ -1,7 +1,6 @@
 package router
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -19,13 +18,16 @@ func CreatePing(c echo.Context) error {
 	count, _ := strconv.Atoi(c.FormValue("count"))
 	info := PingInfo{hostname, count}
 
-	// input Ping List
-	pingList = append(pingList, info)
+	if CheckByHostname(pingList, hostname) {
+		return c.JSON(http.StatusOK, "이미 체크 중인 Server입니다.")
+	} else {
+		// input Ping List
+		pingList = append(pingList, info)
 
-	// Make Ping
-	go doPing(info)
-
-	return c.JSON(http.StatusOK, &info)
+		// Make Ping
+		go DoPing(&pingList, info)
+		return c.JSON(http.StatusOK, &info)
+	}
 }
 
 func GetPing(c echo.Context) error {
@@ -33,17 +35,17 @@ func GetPing(c echo.Context) error {
 	hostname := c.Param("hostname")
 	wait := c.QueryParam("wait")
 
-	// check parameter
-	fmt.Println(hostname, wait)
+	if wait != "true" {
+		// return current job result
+		return c.String(http.StatusOK, ReadPingLog(hostname))
+	} else {
+		// return job result until done
 
-	// return current job result
+		// get HTTP Connection
 
-	// return job result until done
-	// get HTTP Connection
-
-	// send message
-
-	return c.String(http.StatusOK, hostname)
+		// send message
+		return c.String(http.StatusOK, hostname)
+	}
 }
 
 func GetPingList(c echo.Context) error {

@@ -10,7 +10,7 @@ import (
 	"golang.org/x/net/ipv4"
 )
 
-func Ping(addr string) (*net.IPAddr, time.Duration, error) {
+func Ping(seq int, addr string) (*net.IPAddr, time.Duration, error) {
 	// Start listening for icmp replies
 	c, err := icmp.ListenPacket("ip4:icmp", "0.0.0.0")
 	if err != nil {
@@ -29,7 +29,7 @@ func Ping(addr string) (*net.IPAddr, time.Duration, error) {
 	m := icmp.Message{
 		Type: ipv4.ICMPTypeEcho, Code: 0,
 		Body: &icmp.Echo{
-			ID: os.Getpid() & 0xffff, Seq: 1, //<< uint(seq), // TODO
+			ID: os.Getpid() & 0xffff, Seq: seq, //<< uint(seq), // TODO
 			Data: []byte(""),
 		},
 	}
