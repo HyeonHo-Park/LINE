@@ -7,14 +7,16 @@ import (
 	"os"
 	"strconv"
 
+	. "github.com/HyeonHo-Park/LINE/model"
+	. "github.com/HyeonHo-Park/LINE/utils"
 	"github.com/labstack/echo/v4"
 )
 
-var pingList []pingInfo
+var pingList []PingInfo
 
-func doPing(info pingInfo) {
+func doPing(info PingInfo) {
 	// Log File Delete
-	logPath := "../pingLog/" + info.Hostname + ".txt"
+	logPath := "/tmp/pingLog/" + info.Hostname + ".txt"
 	os.Remove(logPath)
 
 	// Ping
@@ -39,11 +41,11 @@ func doPing(info pingInfo) {
 	}
 }
 
-func createPing(c echo.Context) error {
+func CreatePing(c echo.Context) error {
 	// Get Values
 	hostname := c.FormValue("server")
 	count, _ := strconv.Atoi(c.FormValue("count"))
-	info := pingInfo{hostname, count}
+	info := PingInfo{hostname, count}
 
 	// input Ping List
 	pingList = append(pingList, info)
@@ -54,7 +56,7 @@ func createPing(c echo.Context) error {
 	return c.JSON(http.StatusOK, &info)
 }
 
-func getPing(c echo.Context) error {
+func GetPing(c echo.Context) error {
 	// get hostname in param
 	hostname := c.Param("hostname")
 	wait := c.QueryParam("wait")
@@ -72,16 +74,16 @@ func getPing(c echo.Context) error {
 	return c.String(http.StatusOK, hostname)
 }
 
-func getPingList(c echo.Context) error {
+func GetPingList(c echo.Context) error {
 	return c.JSON(http.StatusOK, pingList)
 }
 
-func deletePing(c echo.Context) error {
+func DeletePing(c echo.Context) error {
 	// get hostname in param
 	hostname := c.Param("hostname")
 
 	// delete hostname in pingList
-	RemoveByHostname(hostname)
+	pingList = RemoveByHostname(pingList, hostname)
 
 	// Delete Ping
 

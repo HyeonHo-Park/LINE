@@ -1,6 +1,6 @@
 package model
 
-type pingInfo struct {
+type PingInfo struct {
 	Hostname string `json:"hostname"`
 	Count    int    `json:"count"`
 }
