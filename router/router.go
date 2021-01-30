@@ -3,6 +3,7 @@ package router
 import (
 	"encoding/json"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -39,18 +40,19 @@ func GetPing(c echo.Context) error {
 	hostname := c.Param("hostname")
 	wait := c.QueryParam("wait")
 	index := GetIndexByHostname(pingList, hostname)
-	fileLength := pingList[index].Count
 
 	if index == -1 {
-		return c.String(http.StatusOK, "이미 수행이 끝난 작업 입니다.")
+		return c.String(http.StatusOK, "이미 수행이 끝났거나 없는 작업 입니다.")
 	} else {
 		if wait != "true" {
 			// return current job result
 			return c.String(http.StatusOK, ReadPingLog(hostname))
 		} else {
 			// return job result until done
+
+			// set fileLength / logPath
+			fileLength := pingList[index].Count
 			logPath := "/tmp/pingLog/" + hostname + ".txt"
-			// logPath := "/Users/hyeonho/Desktop/LINE/pingLog/" + hostname + ".txt"
 
 			// set response
 			c.Response().Header().Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
@@ -73,7 +75,7 @@ func GetPing(c echo.Context) error {
 				// check file
 				icmpSeq := strings.Split(line.Text, " ")
 				seq := strings.Split(icmpSeq[3], "=")
-				if seq[1] == strconv.Itoa(fileLength) {
+				if seq[1] == strconv.Itoa(fileLength) || NonExistFileCheck(logPath) {
 					break
 				}
 			}
@@ -89,11 +91,11 @@ func GetPingList(c echo.Context) error {
 func DeletePing(c echo.Context) error {
 	// get hostname in param
 	hostname := c.Param("hostname")
+	logPath := "/tmp/pingLog/" + hostname + ".txt"
 
 	// delete hostname in pingList
 	pingList = RemoveByHostname(pingList, hostname)
-
-	// Delete Ping
+	os.Remove(logPath)
 
 	return c.String(http.StatusOK, "Delete Ping "+hostname)
 }
