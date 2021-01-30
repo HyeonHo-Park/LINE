@@ -20,7 +20,7 @@ var doc = `{
         "title": "{{.Title}}",
         "contact": {
             "name": "Hyeonho Park",
-            "url": "https://github.com/HyeonHo-Park/LINE-TEST",
+            "url": "https://github.com/HyeonHo-Park/LINE",
             "email": "hyunho129@naver.com"
         },
         "license": {
