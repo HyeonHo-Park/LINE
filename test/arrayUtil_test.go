@@ -28,6 +28,26 @@ func TestCheckByHostname(t *testing.T) {
 	assert.Equal(t, false, case3)
 }
 
+func TestGetIndexByHostname(t *testing.T) {
+	// Set UP
+	var pingList []PingInfo
+	data1 := PingInfo{hostname1, count1}
+	data2 := PingInfo{hostname2, count2}
+
+	pingList = append(pingList, data1)
+	pingList = append(pingList, data2)
+
+	// Act
+	case1 := GetIndexByHostname(pingList, hostname1)
+	case2 := GetIndexByHostname(pingList, hostname2)
+	case3 := GetIndexByHostname(pingList, "nothing")
+
+	// Assertion
+	assert.Equal(t, 0, case1)
+	assert.Equal(t, 1, case2)
+	assert.Equal(t, -1, case3)
+}
+
 func TestRemoveByHostname(t *testing.T) {
 	// Set UP
 	var pingList []PingInfo

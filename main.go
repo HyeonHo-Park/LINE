@@ -17,5 +17,7 @@ func main() {
 
 	e.DELETE("/:hostname", DeletePing)
 
+	e.GET("/health", Health)
+
 	e.Logger.Fatal(e.Start(":1323"))
 }

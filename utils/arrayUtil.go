@@ -11,6 +11,15 @@ func CheckByHostname(pingList []PingInfo, hostname string) bool {
 	return false
 }
 
+func GetIndexByHostname(pingList []PingInfo, hostname string) int {
+	for i := range pingList {
+		if pingList[i].Hostname == hostname {
+			return i
+		}
+	}
+	return -1
+}
+
 func RemoveByHostname(pingList []PingInfo, hostname string) []PingInfo {
 	for i := range pingList {
 		if pingList[i].Hostname == hostname {
