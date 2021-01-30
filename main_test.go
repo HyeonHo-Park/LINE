@@ -11,6 +11,8 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
+
+	. "github.com/HyeonHo-Park/LINE/model"
 )
 
 /*
@@ -26,11 +28,6 @@ import (
 		{"hostname": "google.com", "count": 100}
 */
 
-type pingInfo struct {
-	Hostname string `json:"hostname"`
-	Count    int    `json:"count"`
-}
-
 const (
 	hostname1 = "google.com"
 	hostname2 = "naver.com"
@@ -41,7 +38,7 @@ const (
 func TestCreatePing(t *testing.T) {
 	// Set UP
 	e := echo.New()
-	formData := pingInfo{hostname1, count1}
+	formData := PingInfo{hostname1, count1}
 
 	f := make(url.Values)
 	f.Set("server", formData.Hostname)
@@ -72,10 +69,10 @@ func TestCreatePing(t *testing.T) {
 func TestGetPingList(t *testing.T) {
 	// Set UP
 	e := echo.New()
-	formData1 := pingInfo{hostname1, count1}
-	formData2 := pingInfo{hostname2, count2}
+	formData1 := PingInfo{hostname1, count1}
+	formData2 := PingInfo{hostname2, count2}
 
-	var pingList []pingInfo
+	var pingList []PingInfo
 	pingList = append(pingList, formData1)
 	pingList = append(pingList, formData2)
 
@@ -103,10 +100,10 @@ func TestGetPingList(t *testing.T) {
 func TestDeletePing(t *testing.T) {
 	// Set UP
 	e := echo.New()
-	formData1 := pingInfo{hostname1, count1}
-	formData2 := pingInfo{hostname2, count2}
+	formData1 := PingInfo{hostname1, count1}
+	formData2 := PingInfo{hostname2, count2}
 
-	var pingList []pingInfo
+	var pingList []PingInfo
 	pingList = append(pingList, formData1)
 	pingList = append(pingList, formData2)
 
