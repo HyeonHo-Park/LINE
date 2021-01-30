@@ -1,4 +1,4 @@
-package test
+package main_test
 
 import (
 	"fmt"
@@ -31,10 +31,17 @@ type pingInfo struct {
 	Count    int    `json:"count"`
 }
 
+const (
+	hostname1 = "google.com"
+	hostname2 = "naver.com"
+	count1    = 100
+	count2    = 200
+)
+
 func TestCreatePing(t *testing.T) {
 	// Set UP
 	e := echo.New()
-	formData := pingInfo{"google.com", 100}
+	formData := pingInfo{hostname1, count1}
 
 	f := make(url.Values)
 	f.Set("server", formData.Hostname)
@@ -49,7 +56,7 @@ func TestCreatePing(t *testing.T) {
 	// Assertions
 	fmt.Println(c)
 	assert.Equal(t, http.StatusOK, rec.Code)
-	assert.Equal(t, formData, rec.Body.String())
+	assert.Equal(t, formData, c.Request().GetBody)
 }
 
 /*
@@ -65,8 +72,8 @@ func TestCreatePing(t *testing.T) {
 func TestGetPingList(t *testing.T) {
 	// Set UP
 	e := echo.New()
-	formData1 := pingInfo{"google.com", 100}
-	formData2 := pingInfo{"naver.com", 200}
+	formData1 := pingInfo{hostname1, count1}
+	formData2 := pingInfo{hostname2, count2}
 
 	var pingList []pingInfo
 	pingList = append(pingList, formData1)
@@ -78,7 +85,8 @@ func TestGetPingList(t *testing.T) {
 	c := e.NewContext(req, rec)
 
 	// Assertions
-	fmt.Println(c)
+	fmt.Println(c.Response())
+	fmt.Println(rec.Body.String())
 	assert.Equal(t, http.StatusOK, rec.Code)
 	assert.Equal(t, pingList, rec.Body.String())
 }
@@ -94,8 +102,21 @@ func TestGetPingList(t *testing.T) {
 */
 func TestDeletePing(t *testing.T) {
 	// Set UP
+	e := echo.New()
+	formData1 := pingInfo{hostname1, count1}
+	formData2 := pingInfo{hostname2, count2}
+
+	var pingList []pingInfo
+	pingList = append(pingList, formData1)
+	pingList = append(pingList, formData2)
 
 	// Act
+	req := httptest.NewRequest(http.MethodDelete, "/", strings.NewReader(hostname1))
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
 
 	// Assertions
+	fmt.Println(c)
+	assert.Equal(t, http.StatusOK, rec.Code)
+	assert.Equal(t, pingList, rec.Body.String())
 }
