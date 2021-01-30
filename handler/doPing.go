@@ -10,8 +10,8 @@ import (
 
 func DoPing(pingList *[]PingInfo, info PingInfo) {
 	// Set Log Path
-	// logPath := "/tmp/pingLog/" + info.Hostname + ".txt"
-	logPath := "/Users/hyeonho/Desktop/LINE/pingLog/" + info.Hostname + ".txt"
+	logPath := "/tmp/pingLog/" + info.Hostname + ".txt"
+	// logPath := "/Users/hyeonho/Desktop/LINE/pingLog/" + info.Hostname + ".txt"
 
 	// Log File Delete
 	os.Remove(logPath)

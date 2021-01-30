@@ -49,7 +49,8 @@ func GetPing(c echo.Context) error {
 			return c.String(http.StatusOK, ReadPingLog(hostname))
 		} else {
 			// return job result until done
-			logPath := "/Users/hyeonho/Desktop/LINE/pingLog/" + hostname + ".txt"
+			logPath := "/tmp/pingLog/" + hostname + ".txt"
+			// logPath := "/Users/hyeonho/Desktop/LINE/pingLog/" + hostname + ".txt"
 
 			// set response
 			c.Response().Header().Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
